@@ -24,7 +24,7 @@ async def on_ready():
 @bot.command()
 async def addbot(ctx, arg=None,*,args=None):
   if arg is None:
-    await ctx.send("Please provide an id")
+    await ctx.send("Please provide an ID.")
   if arg:
     user=re.match(r'<@!?([0-9]+)>$', arg) or re.match(r'([0-9]{15,20})$', arg)
     if user:
@@ -35,11 +35,11 @@ async def addbot(ctx, arg=None,*,args=None):
         user = None
       
       if args is None:
-        await ctx.send("we Don't add bots for no reason")
+        await ctx.send("We don't add bots for no reason.")
       
       if args and user:
         if user.bot is False:
-          await ctx.send("That's not okay. We don't add users, Only Bots to here.")
+          await ctx.send("Please use a *bot* ID, not a *user* ID.")
         if user.bot:
           embed=discord.Embed(title="Verify Bot",timestamp=(ctx.message.created_at))
           embed.set_author(name=f"Bot Wanted: {user}",icon_url=(user.avatar_url))
@@ -59,7 +59,7 @@ async def addbot(ctx, arg=None,*,args=None):
 
       
     if user is None:
-      await ctx.send("not a valid id")
+      await ctx.send("That's not a valid ID.")
     
 B.b()
 bot.loop.create_task(startup())
