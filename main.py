@@ -1,4 +1,4 @@
-import discord, os, random, asyncio, re
+import discord, os, random, asyncio, re, typing
 from discord.ext import commands
 import ClientConfig, B
 
