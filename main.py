@@ -22,9 +22,10 @@ async def on_ready():
 
 
 @bot.command()
-async def addbot(ctx, arg=None,*,args=None):
+async def addbot(ctx, arg = None, *, args=None):
   if arg is None:
     await ctx.send("Please provide an ID.")
+    
   if arg:
     user=re.match(r'<@!?([0-9]+)>$', arg) or re.match(r'([0-9]{15,20})$', arg)
     if user:
@@ -56,6 +57,8 @@ async def addbot(ctx, arg=None,*,args=None):
           embed.set_footer(text=ctx.author.id)
           embed.set_author(name=user.id, icon_url=user.avatar_url_as(format='png'))  
           await bot.get_channel(816807453215424573).send(content=jdjg.mention,embed=embed)
+
+          await ctx.reply(f"We notified the boss that you wanted to add the bot make sure your DMs are open so the boss can dm you on your request, if you don't open your dms to him, you will have your bot instantly denied, and you must request to add your own bot, not other people's bots. You msut also be in our guild.(for safety reasons). If you leave we will kick your bot :eyes:")
 
       
     if user is None:
