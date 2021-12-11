@@ -43,7 +43,7 @@ async def addbot(ctx, arg = None, *, args=None):
           await ctx.send("Please use a *bot* ID, not a *user* ID.")
         if user.bot:
           embed=discord.Embed(title="Verify Bot",timestamp=(ctx.message.created_at))
-          embed.set_author(name=f"Bot Wanted: {user}",icon_url=(user.avatar_url))
+          embed.set_author(name=f"Bot Wanted: {user}",icon_url=(user.display_avatar.url))
           embed.set_footer(text=f"Bot's ID: {user.id}")
           jdjg=bot.get_user(168422909482762240)
           await bot.get_channel(816807453215424573).send(content=jdjg.mention,embed=embed)
@@ -55,7 +55,7 @@ async def addbot(ctx, arg = None, *, args=None):
           embed.add_field(name='Bot', value=f'{user} (ID: {user.id})', inline=False)
           embed.timestamp = ctx.message.created_at
           embed.set_footer(text=ctx.author.id)
-          embed.set_author(name=user.id, icon_url=user.avatar_url_as(format='png'))  
+          embed.set_author(name=user.id, icon_url=user.display_avatar.with_format("png"))  
           await bot.get_channel(816807453215424573).send(content=jdjg.mention,embed=embed)
 
           await ctx.reply(f"We notified the boss that you wanted to add the bot make sure your DMs are open so the boss can dm you on your request, if you don't open your dms to him, you will have your bot instantly denied, and you must request to add your own bot, not other people's bots. You msut also be in our guild.(for safety reasons). If you leave we will kick your bot :eyes:")
