@@ -1,4 +1,4 @@
-import discord, os, random, asyncio, re, typing
+import discord, os, random, asyncio, re, typing, traceback
 from discord.ext import commands
 import ClientConfig, B
 
@@ -19,6 +19,13 @@ async def on_ready():
   print("Bot is Ready")
   print(f"Logged in as {bot.user}")
   print(f"Id: {bot.user.id}")
+
+@bot.event
+async def on_error(event, *args, **kwargs):
+  more_information = os.sys.exc_info()
+  error_wanted = traceback.format_exc()
+  traceback.print_exc()
+  #print(more_information[0])
 
 
 @bot.command()
