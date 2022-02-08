@@ -1,84 +1,76 @@
-import discord
+import discord, os, random, asyncio, re, typing, traceback
 from discord.ext import commands
-from discord.ui import Modal, InputText
-import os
+import ClientConfig, B
 
-# Defines a custom Modal with questions
-# that user has to answer. The callback function
-# of this class is called when the user submits the modal
-class Modal(Modal):
-    def __init__(self) -> None:
-        super().__init__("My Cool Form 1")
+bot = ClientConfig.bot
 
-        # Set the questions that will be shown in the modal
-        # The placeholder is what will be shown when nothing is typed
-        self.add_item(InputText(label="What is your name?", placeholder="Reveal your secrets!"))
+async def status_task():
+  await bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.playing, name="Looking for Bots to verify"))
+  await asyncio.sleep(40)
+  await bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name=f"{len(bot.guilds)} servers | {len(bot.users)} users"))
+  await asyncio.sleep(40)
 
-        # Provide value argument to prefill the input
-        # The style parameter allows you to set the style of the input
-        # You can choose from short and long
-        self.add_item(
-            InputText(
-                label="What is the meaning of life?",
-                value="The meaning of life is ...",
-                style=discord.InputTextStyle.long,
-            )
-        )
+async def startup():
+  await bot.wait_until_ready()
+  await status_task()
 
-    async def callback(self, interaction: discord.Interaction):
-        # Use the interaction object to send a response message containing
-        # the user's name or choice. The self object refers to the
-        # Modal object, and the values attribute gets a list of the user's
-        # answers. We only want the first one.
-        await interaction.response.send_message(
-            f"Your name is {self.children[0].value}\n" f"The meaning of life is {self.children[1].value}\n"
-        )
+@bot.event
+async def on_ready():
+  print("Bot is Ready")
+  print(f"Logged in as {bot.user}")
+  print(f"Id: {bot.user.id}")
 
-
-class ModalView(discord.ui.View):
-    @discord.ui.button(label="Open Modal", style=discord.ButtonStyle.green)
-    async def open_modal(self, button: discord.Button, interaction: discord.Interaction):
-        # Create the modal
-        modal = Modal()
-
-        # Sending a message containing our modal
-        await interaction.response.send_modal(modal)
-
-
-class Bot(commands.Bot):
-    def __init__(self):
-        super().__init__(
-            command_prefix=commands.when_mentioned_or("$"),
-            intents=discord.Intents(guilds=True, messages=True),
-            slash_commands=True,
-        )
-
-    async def on_ready(self):
-        print(f"Logged in as {self.user} (ID: {self.user.id})")
-        print("------")
-
-
-bot = Bot()
+@bot.event
+async def on_error(event, *args, **kwargs):
+  more_information = os.sys.exc_info()
+  error_wanted = traceback.format_exc()
+  traceback.print_exc()
+  #print(more_information[0])
 
 
 @bot.command()
-async def form(ctx: commands.Context):
-    """Sends a message with our modal"""
+async def addbot(ctx, arg = None, *, args=None):
+  if arg is None:
+    await ctx.send("Please provide an ID.")
+    
+  if arg:
+    user=re.match(r'<@!?([0-9]+)>$', arg) or re.match(r'([0-9]{15,20})$', arg)
+    if user:
+      user_id = (user.group(1))
+      try:
+        user=await commands.UserConverter().convert(ctx,user_id)
+      except commands.UserNotFound:
+        user = None
+      
+      if args is None:
+        await ctx.send("We don't add bots for no reason.")
+      
+      if args and user:
+        if user.bot is False:
+          await ctx.send("Please use a *bot* ID, not a *user* ID.")
+        if user.bot:
+          embed=discord.Embed(title="Verify Bot",timestamp=(ctx.message.created_at))
+          embed.set_author(name=f"Bot Wanted: {user}",icon_url=(user.display_avatar.url))
+          embed.set_footer(text=f"Bot's ID: {user.id}")
+          jdjg=bot.get_user(168422909482762240)
+          await bot.get_channel(816807453215424573).send(content=jdjg.mention,embed=embed)
 
-    # Create the view containing our modal
-    view = ModalView()
-    # Sending a message containing our view
-    await ctx.send("Click to open modal:", view=view)
+          url = f'https://discordapp.com/oauth2/authorize?client_id={user.id}&scope=bot'
+          description = f'{args}\n\n[Invite URL]({url})'
+          embed = discord.Embed(title='Bot Request', colour=discord.Colour.blurple(), description=description)
+          embed.add_field(name='Author', value=f'{ctx.author} (ID: {ctx.author.id})', inline=False)
+          embed.add_field(name='Bot', value=f'{user} (ID: {user.id})', inline=False)
+          embed.timestamp = ctx.message.created_at
+          embed.set_footer(text=ctx.author.id)
+          embed.set_author(name=user.id, icon_url=user.display_avatar.with_format("png"))  
+          await bot.get_channel(816807453215424573).send(content=jdjg.mention,embed=embed)
 
+          await ctx.reply(f"We notified the boss that you wanted to add the bot make sure your DMs are open so the boss can dm you on your request, if you don't open your dms to him, you will have your bot instantly denied, and you must request to add your own bot, not other people's bots. You msut also be in our guild.(for safety reasons). If you leave we will kick your bot :eyes:")
 
-# Can also be used from slash commands directly
-@bot.command(message_command=False)
-async def modal(ctx: commands.Context):
-    # Create the modal
-    modal = Modal()
-
-    # Sending our modal
-    await ctx.interaction.response.send_modal(modal)
-
-
+      
+    if user is None:
+      await ctx.send("That's not a valid ID.")
+    
+B.b()
+bot.loop.create_task(startup())
 bot.run(os.environ["TOKEN"])
