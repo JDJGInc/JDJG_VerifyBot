@@ -1,2 +1,3 @@
-# JDJG_VerifyBot
-a bot used to verify Bots in my own guilds and such.
+# Verify Bot
+
+a bot used to verify Bots in test guilds and whatnot
