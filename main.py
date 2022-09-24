@@ -1,6 +1,16 @@
-import discord, os, random, asyncio, re, typing, traceback
+import asyncio
+import os
+import random
+import re
+import sys
+import traceback
+import typing
+
+import discord
 from discord.ext import commands
-import ClientConfig, B
+
+import B
+import ClientConfig
 
 bot = ClientConfig.bot
 
@@ -34,7 +44,7 @@ async def on_ready():
 
 @bot.event
 async def on_error(event, *args, **kwargs):
-    more_information = os.sys.exc_info()
+    more_information = sys.exc_info()
     error_wanted = traceback.format_exc()
     traceback.print_exc()
     # print(more_information[0])
