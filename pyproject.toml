@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-"discord.py" = {git = "https://github.com/iDevision/enhanced-discord.py", branch = "2.0"}
+"discord.py" = {git = "https://github.com/JDsProjects/discord.py", branch = "2.0"}
 flask = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
